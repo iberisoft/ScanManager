@@ -1,6 +1,7 @@
-﻿using EasyModbus;
+﻿using FluentModbus;
 using System;
 using System.ComponentModel;
+using System.Net;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -74,14 +75,28 @@ namespace ScanManager
             }
         }
 
-        readonly ModbusClient m_ModbusClient = new ModbusClient();
+        bool m_IsEjecting;
+
+        public bool IsEjecting
+        {
+            get => m_IsEjecting;
+            set
+            {
+                if (m_IsEjecting != value)
+                {
+                    m_IsEjecting = value;
+                    PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(IsEjecting)));
+                }
+            }
+        }
+
+        readonly ModbusTcpClient m_ModbusClient = new ModbusTcpClient();
 
         private void Connect(object sender, RoutedEventArgs e)
         {
             try
             {
-                m_ModbusClient.IPAddress = Properties.Settings.Default.Host;
-                m_ModbusClient.Connect();
+                m_ModbusClient.Connect(IPAddress.Parse(Properties.Settings.Default.Host));
                 m_Timer.Start();
                 Timer_Tick(m_Timer, EventArgs.Empty);
                 IsConnected = true;
@@ -99,13 +114,14 @@ namespace ScanManager
             IsConnected = false;
             IsReady = false;
             IsScanning = false;
+            IsEjecting = false;
         }
 
         private void Scan(object sender, RoutedEventArgs e)
         {
             try
             {
-                m_ModbusClient.WriteSingleCoil(0, true);
+                m_ModbusClient.WriteSingleCoil(0, 0, true);
             }
             catch
             {
@@ -116,7 +132,18 @@ namespace ScanManager
         {
             try
             {
-                m_ModbusClient.WriteSingleCoil(0, false);
+                m_ModbusClient.WriteSingleCoil(0, 0, false);
+            }
+            catch
+            {
+            }
+        }
+
+        private void Eject(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                m_ModbusClient.WriteSingleCoil(0, 1, true);
             }
             catch
             {
@@ -127,8 +154,11 @@ namespace ScanManager
         {
             try
             {
-                IsReady = m_ModbusClient.ReadDiscreteInputs(0, 1)[0];
-                IsScanning = m_ModbusClient.ReadCoils(0, 1)[0];
+                var discreteInputs = m_ModbusClient.ReadDiscreteInputs(0, 0, 1);
+                IsReady = discreteInputs.Get(0);
+                var coils = m_ModbusClient.ReadCoils(0, 0, 2);
+                IsScanning = coils.Get(0);
+                IsEjecting = coils.Get(1);
             }
             catch
             {

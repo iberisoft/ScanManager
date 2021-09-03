@@ -10,12 +10,16 @@
             <Separator />
             <TextBlock Text="Scanning:" />
             <TextBlock Text="{Binding Path=IsScanning}" />
+            <Separator />
+            <TextBlock Text="Ejecting:" />
+            <TextBlock Text="{Binding Path=IsEjecting}" />
         </StatusBar>
-        <UniformGrid Rows="2">
+        <UniformGrid Rows="3">
             <Button Content="Connect" IsEnabled="{Binding Path=IsDisconnected}" Click="Connect" />
             <Button Content="Disconnect" IsEnabled="{Binding Path=IsConnected}" Click="Disconnect" />
             <Button Content="Scan" IsEnabled="{Binding Path=IsConnected}" Click="Scan" />
             <Button Content="Abort" IsEnabled="{Binding Path=IsConnected}" Click="Abort" />
+            <Button Content="Eject" IsEnabled="{Binding Path=IsConnected}" Click="Eject" />
         </UniformGrid>
     </DockPanel>
 </Window>
