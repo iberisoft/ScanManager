@@ -24,3 +24,15 @@ Address | Description
 --------|-------------
 0       | Write `true` to scan a film, `false` to abort scanning
 1       | Write `true` to eject a film
+
+### Read Holding Registers
+
+Address | Description
+--------|-------------
+0       | Current resolution value in dpi (VIDAR) or microns (Array)
+
+### Write Holding Registers
+
+Address | Description
+--------|-------------
+0       | Set the resolution value in dpi (VIDAR) or microns (Array)
