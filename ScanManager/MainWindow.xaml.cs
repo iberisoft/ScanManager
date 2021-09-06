@@ -90,6 +90,21 @@ namespace ScanManager
             }
         }
 
+        ushort? m_Resolution;
+
+        public ushort? Resolution
+        {
+            get => m_Resolution;
+            set
+            {
+                if (m_Resolution != value)
+                {
+                    m_Resolution = value;
+                    PropertyChanged.Invoke(this, new PropertyChangedEventArgs(nameof(Resolution)));
+                }
+            }
+        }
+
         readonly ModbusTcpClient m_ModbusClient = new ModbusTcpClient();
 
         private void Connect(object sender, RoutedEventArgs e)
@@ -115,6 +130,7 @@ namespace ScanManager
             IsReady = false;
             IsScanning = false;
             IsEjecting = false;
+            Resolution = null;
         }
 
         private void Scan(object sender, RoutedEventArgs e)
@@ -150,6 +166,20 @@ namespace ScanManager
             }
         }
 
+        private void SetResolution(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (ushort.TryParse(ResolutionText.Text, out ushort value))
+                {
+                    m_ModbusClient.WriteSingleRegister(0, 0, value);
+                }
+            }
+            catch
+            {
+            }
+        }
+
         private void Timer_Tick(object sender, EventArgs e)
         {
             try
@@ -159,6 +189,8 @@ namespace ScanManager
                 var coils = m_ModbusClient.ReadCoils(0, 0, 2);
                 IsScanning = coils.Get(0);
                 IsEjecting = coils.Get(1);
+                var registers = m_ModbusClient.ReadHoldingRegisters<ushort>(0, 0, 1);
+                Resolution = registers[0];
             }
             catch
             {

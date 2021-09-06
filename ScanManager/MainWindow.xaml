@@ -1,7 +1,7 @@
 ﻿<Window x:Class="ScanManager.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Name="Window" Title="Scan Manager" Width="400" SizeToContent="Height" FontSize="15" DataContext="{Binding ElementName=Window}" Closed="Window_Closed">
+        Name="Window" Title="Scan Manager" Width="500" SizeToContent="Height" FontSize="15" DataContext="{Binding ElementName=Window}" Closed="Window_Closed">
     <DockPanel>
         <TextBox DockPanel.Dock="Top" Text="{Binding Source={StaticResource Settings}, Path=Host}" />
         <StatusBar DockPanel.Dock="Bottom" FontSize="15">
@@ -13,7 +13,15 @@
             <Separator />
             <TextBlock Text="Ejecting:" />
             <TextBlock Text="{Binding Path=IsEjecting}" />
+            <Separator />
+            <TextBlock Text="Resolution:" />
+            <TextBlock Text="{Binding Path=Resolution}" />
         </StatusBar>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Label VerticalAlignment="Center" Content="Resolution:" />
+            <TextBox Name="ResolutionText" VerticalAlignment="Center" Width="60" />
+            <Button Content="Set" Click="SetResolution" />
+        </StackPanel>
         <UniformGrid Rows="3">
             <Button Content="Connect" IsEnabled="{Binding Path=IsDisconnected}" Click="Connect" />
             <Button Content="Disconnect" IsEnabled="{Binding Path=IsConnected}" Click="Disconnect" />
