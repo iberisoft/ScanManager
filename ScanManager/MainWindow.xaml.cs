@@ -1,7 +1,8 @@
 ﻿using FluentModbus;
 using System;
 using System.ComponentModel;
-using System.Net;
+using System.IO.Ports;
+using System.Linq;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -26,6 +27,8 @@ namespace ScanManager
         {
             Properties.Settings.Default.Save();
         }
+
+        public string[] AllSerialPorts => SerialPort.GetPortNames().OrderBy(portName => portName).ToArray();
 
         bool m_IsConnected;
 
@@ -105,13 +108,13 @@ namespace ScanManager
             }
         }
 
-        readonly ModbusTcpClient m_ModbusClient = new ModbusTcpClient();
+        readonly ModbusRtuClient m_ModbusClient = new ModbusRtuClient();
 
         private void Connect(object sender, RoutedEventArgs e)
         {
             try
             {
-                m_ModbusClient.Connect(IPAddress.Parse(Properties.Settings.Default.Host));
+                m_ModbusClient.Connect(Properties.Settings.Default.SerialPort);
                 m_Timer.Start();
                 Timer_Tick(m_Timer, EventArgs.Empty);
                 IsConnected = true;
@@ -124,7 +127,7 @@ namespace ScanManager
 
         private void Disconnect(object sender, RoutedEventArgs e)
         {
-            m_ModbusClient.Disconnect();
+            m_ModbusClient.Close();
             m_Timer.Stop();
             IsConnected = false;
             IsReady = false;
@@ -137,7 +140,7 @@ namespace ScanManager
         {
             try
             {
-                m_ModbusClient.WriteSingleCoil(0, 0, true);
+                m_ModbusClient.WriteSingleCoil(1, 0, true);
             }
             catch
             {
@@ -148,7 +151,7 @@ namespace ScanManager
         {
             try
             {
-                m_ModbusClient.WriteSingleCoil(0, 0, false);
+                m_ModbusClient.WriteSingleCoil(1, 0, false);
             }
             catch
             {
@@ -159,7 +162,7 @@ namespace ScanManager
         {
             try
             {
-                m_ModbusClient.WriteSingleCoil(0, 1, true);
+                m_ModbusClient.WriteSingleCoil(1, 1, true);
             }
             catch
             {
@@ -172,7 +175,7 @@ namespace ScanManager
             {
                 if (ushort.TryParse(ResolutionText.Text, out ushort value))
                 {
-                    m_ModbusClient.WriteSingleRegister(0, 0, value);
+                    m_ModbusClient.WriteSingleRegister(1, 0, value);
                 }
             }
             catch
@@ -184,12 +187,12 @@ namespace ScanManager
         {
             try
             {
-                var discreteInputs = m_ModbusClient.ReadDiscreteInputs(0, 0, 1);
+                var discreteInputs = m_ModbusClient.ReadDiscreteInputs(1, 0, 1);
                 IsReady = discreteInputs.Get(0);
-                var coils = m_ModbusClient.ReadCoils(0, 0, 2);
+                var coils = m_ModbusClient.ReadCoils(1, 0, 2);
                 IsScanning = coils.Get(0);
                 IsEjecting = coils.Get(1);
-                var registers = m_ModbusClient.ReadHoldingRegisters<ushort>(0, 0, 1);
+                var registers = m_ModbusClient.ReadHoldingRegisters<ushort>(1, 0, 1);
                 Resolution = registers[0];
             }
             catch

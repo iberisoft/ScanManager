@@ -3,7 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Name="Window" Title="Scan Manager" Width="500" SizeToContent="Height" FontSize="15" DataContext="{Binding ElementName=Window}" Closed="Window_Closed">
     <DockPanel>
-        <TextBox DockPanel.Dock="Top" Text="{Binding Source={StaticResource Settings}, Path=Host}" />
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Label Content="Serial Port:" />
+            <ComboBox ItemsSource="{Binding Path=AllSerialPorts}" SelectedItem="{Binding Source={StaticResource Settings}, Path=SerialPort}" />
+        </StackPanel>
         <StatusBar DockPanel.Dock="Bottom" FontSize="15">
             <TextBlock Text="Ready:" />
             <TextBlock Text="{Binding Path=IsReady}" />

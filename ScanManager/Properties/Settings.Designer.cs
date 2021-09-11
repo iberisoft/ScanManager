@@ -25,13 +25,13 @@ namespace ScanManager.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
-        public string Host {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SerialPort {
             get {
-                return ((string)(this["Host"]));
+                return ((string)(this["SerialPort"]));
             }
             set {
-                this["Host"] = value;
+                this["SerialPort"] = value;
             }
         }
     }
