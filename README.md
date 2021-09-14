@@ -1,38 +1,22 @@
 # Scan Manager
 
-This application manages other film digitizing applications via Modbus.
+This application manages other film digitizing applications via RS232/485.
 
-## Modbus Protocol
+## Serial Protocol
 
-### Read Discrete Inputs
+### Read Commands
 
-Address | Description
---------|-------------
-0       | `true` if the scanner is ready to work
+Command | Result     | Description
+--------|------------|-------------
+RD?     | RD=*value* | Get `1` if the scanner is ready to work, otherwise `0`
+SC?     | SC=*value* | Get `1` if the scanner is scanning, otherwise `0`
+EJ?     | EJ=*value* | Get `1` if the scanner is ejecting, otherwise `0`
+RS?     | RS=*value* | Get the resolution value in dpi (VIDAR) or microns (Array)
 
-### Read Coils
+### Write Commands
 
-Address | Description
---------|-------------
-0       | `true` if the scanner is scanning
-1       | `true` if the scanner is ejecting
-
-
-### Write Coils
-
-Address | Description
---------|-------------
-0       | Write `true` to scan a film, `false` to abort scanning
-1       | Write `true` to eject a film
-
-### Read Holding Registers
-
-Address | Description
---------|-------------
-0       | Current resolution value in dpi (VIDAR) or microns (Array)
-
-### Write Holding Registers
-
-Address | Description
---------|-------------
-0       | Set the resolution value in dpi (VIDAR) or microns (Array)
+Command    | Result | Description
+-----------|--------|-------------
+SC=*value* | OK     | Set `1` to scan a film, `0` to abort scanning
+EJ=*value* | OK     | Set `1` to eject a film
+RS=*value* | OK     | Set the resolution value in dpi (VIDAR) or microns (Array)
