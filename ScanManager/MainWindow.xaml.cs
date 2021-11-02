@@ -47,9 +47,9 @@ namespace ScanManager
 
         public bool IsDisconnected => !IsConnected;
 
-        bool m_IsReady;
+        int? m_IsReady;
 
-        public bool IsReady
+        public int? IsReady
         {
             get => m_IsReady;
             set
@@ -62,9 +62,9 @@ namespace ScanManager
             }
         }
 
-        bool m_IsScanning;
+        int? m_IsScanning;
 
-        public bool IsScanning
+        public int? IsScanning
         {
             get => m_IsScanning;
             set
@@ -77,9 +77,9 @@ namespace ScanManager
             }
         }
 
-        bool m_IsEjecting;
+        int? m_IsEjecting;
 
-        public bool IsEjecting
+        public int? IsEjecting
         {
             get => m_IsEjecting;
             set
@@ -134,9 +134,9 @@ namespace ScanManager
             m_Port.Close();
             m_Timer.Stop();
             IsConnected = false;
-            IsReady = false;
-            IsScanning = false;
-            IsEjecting = false;
+            IsReady = null;
+            IsScanning = null;
+            IsEjecting = null;
             Resolution = null;
         }
 
@@ -191,9 +191,9 @@ namespace ScanManager
         {
             try
             {
-                IsReady = int.Parse(m_Port.ReadValue("RD")) != 0;
-                IsScanning = int.Parse(m_Port.ReadValue("SC")) != 0;
-                IsEjecting = int.Parse(m_Port.ReadValue("EJ")) != 0;
+                IsReady = int.Parse(m_Port.ReadValue("RD"));
+                IsScanning = int.Parse(m_Port.ReadValue("SC"));
+                IsEjecting = int.Parse(m_Port.ReadValue("EJ"));
                 Resolution = ushort.Parse(m_Port.ReadValue("RS"));
             }
             catch
