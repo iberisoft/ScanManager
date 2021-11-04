@@ -120,8 +120,8 @@ namespace ScanManager
                 m_Port.PortName = Properties.Settings.Default.SerialPort;
                 m_Port.Open();
                 m_Timer.Start();
-                Timer_Tick(m_Timer, EventArgs.Empty);
                 IsConnected = true;
+                Timer_Tick(m_Timer, EventArgs.Empty);
             }
             catch (Exception ex)
             {
