@@ -173,6 +173,17 @@ namespace ScanManager
             }
         }
 
+        private void Restart(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                m_Port.WriteCommand("RST");
+            }
+            catch
+            {
+            }
+        }
+
         private void SetResolution(object sender, RoutedEventArgs e)
         {
             try

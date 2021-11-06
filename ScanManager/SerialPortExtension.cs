@@ -26,5 +26,15 @@ namespace ScanManager
             }
             return response.Substring(name.Length + 1);
         }
+
+        public static void WriteCommand(this SerialPort port, string command)
+        {
+            port.WriteLine(command);
+            var response = port.ReadLine();
+            if (response != "OK")
+            {
+                throw new InvalidOperationException("Invalid response");
+            }
+        }
     }
 }

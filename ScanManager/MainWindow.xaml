@@ -31,6 +31,7 @@
             <Button Content="Scan" IsEnabled="{Binding Path=IsConnected}" Click="Scan" />
             <Button Content="Abort" IsEnabled="{Binding Path=IsConnected}" Click="Abort" />
             <Button Content="Eject" IsEnabled="{Binding Path=IsConnected}" Click="Eject" />
+            <Button Content="Restart" IsEnabled="{Binding Path=IsConnected}" Click="Restart" />
         </UniformGrid>
     </DockPanel>
 </Window>
