@@ -188,7 +188,7 @@ namespace ScanManager
         {
             try
             {
-                if (ushort.TryParse(ResolutionText.Text, out ushort value))
+                if (ushort.TryParse(ResolutionText.Text, out var value))
                 {
                     m_Port.WriteValue("RS", value.ToString());
                 }
