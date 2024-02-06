@@ -24,7 +24,7 @@ namespace ScanManager
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Save();
+            Settings.Default.Save();
         }
 
         public string[] AllSerialPorts => SerialPort.GetPortNames().OrderBy(portName => portName).ToArray();
@@ -117,7 +117,7 @@ namespace ScanManager
         {
             try
             {
-                m_Port.PortName = Properties.Settings.Default.SerialPort;
+                m_Port.PortName = Settings.Default.SerialPort;
                 m_Port.Open();
                 m_Timer.Start();
                 IsConnected = true;
